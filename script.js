@@ -1,30 +1,25 @@
-const WHITE_KEYS = ['z', 'x', 'c', 'v', 'b', 'n', 'm']
-const BLACK_KEYS = ['s', 'd', 'g', 'h', 'j']
+document.addEventListener('DOMContentLoaded', () => {
+    const squares = document.querySelectorAll('.grid div')
+    const playerDisplay = document.querySelector('#player')
 
-const keys = document.querySelectorAll('.key')
-const whiteKeys = document.querySelectorAll('.key.white')
-const blackKeys = document.querySelectorAll('.key.black')
+    let currentPlayer = 'playerX'
 
-keys.forEach(key => {
-  key.addEventListener('click', () => playNote(key))
+    squares.forEach(square => {
+        square.addEventListener('click', clickOutcome)
+    })
+
+    function clickOutcome(e) {
+        const squareArray = Array.from(squares)
+        const index = squareArray.indexOf(e.target)
+        playerDisplay.innerHTML = currentPlayer
+
+        if (currentPlayer === 'playerX') {
+            squares[index].classList.add('playerX')
+            currentPlayer = 'playerO'
+        } else {
+            squares[index].classList.add('playerO')
+            currentPlayer = 'playerX'
+        }
+    }
+
 })
-
-document.addEventListener('keydown', e => {
-  if (e.repeat) return
-  const key = e.key
-  const whiteKeyIndex = WHITE_KEYS.indexOf(key)
-  const blackKeyIndex = BLACK_KEYS.indexOf(key)
-
-  if (whiteKeyIndex > -1) playNote(whiteKeys[whiteKeyIndex])
-  if (blackKeyIndex > -1) playNote(blackKeys[blackKeyIndex])
-})
-
-function playNote(key) {
-  const noteAudio = document.getElementById(key.dataset.note)
-  noteAudio.currentTime = 0
-  noteAudio.play()
-  key.classList.add('active')
-  noteAudio.addEventListener('ended', () => {
-    key.classList.remove('active')
-  })
-}
